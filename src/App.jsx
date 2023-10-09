@@ -2,11 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import "./App.scss";
 function App() {
   const [tabs, setTabs] = useState(["All", "Home", "Work"]);
-  const [listItems, setListItems] = useState([
-    "Побегать",
-    "Полетать",
-    "Стирать",
-  ]);
+  const [listItems, setListItems] = useState([]);
   const [text, setText] = useState("");
   function handleSubmit() {
     let nextListItems = [...listItems];
@@ -26,7 +22,9 @@ function App() {
             <li>
               <p>{el}</p>
               <button>🖊️</button>
-              <button>❌</button>
+              <button onClick={() => {
+                
+              }}>❌</button>
             </li>
           ))}
         </ol>
