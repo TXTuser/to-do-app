@@ -1,14 +1,42 @@
 import { useEffect, useState, useRef } from "react";
 import "./App.scss";
 function App() {
-  const [tabs, setTabs] = useState(["All", "Home", "Work"]);
+  const [tabs, setTabs] = useState([]);
   const [listItems, setListItems] = useState([]);
   const [text, setText] = useState("");
+  const [editedItem, setEditedItem] = useState(null);
   function handleSubmit() {
     let nextListItems = [...listItems];
     nextListItems.push(text);
     setListItems(nextListItems);
   }
+
+  function changeInput(text, id) {
+    let nextListItems = [...listItems];
+    nextListItems[id] = text;
+    setListItems(nextListItems);
+  }
+
+  // function changeItem(id) {
+  //   setEditedItem(id);
+  // }
+
+  // Удаление по нажатии на бомбочку
+
+  // function deleteListItems() {
+  //   let deleteItems = [...listItems];
+  //   deleteItems = [];
+  //   setListItems(deleteItems);
+  // }
+
+  // onClick={() => deleteListItems()}
+
+  function removeItem(id) {
+    let nextListItems = [...listItems];
+    nextListItems.splice(id, 1);
+    setListItems(nextListItems);
+  }
+
   return (
     <div className="App">
       <form action="">
@@ -19,12 +47,25 @@ function App() {
         ))}
         <ol>
           {listItems.map((el, i) => (
-            <li>
-              <p>{el}</p>
-              <button>🖊️</button>
-              <button onClick={() => {
-                
-              }}>❌</button>
+            <li
+              onClick={(event) =>
+                (event.target.children[0].style.textDecoration = "line-through")
+              }
+            >
+              <input
+                type="text"
+                value={el}
+                className="rename"
+                size={1}
+                onChange={(event) => changeInput(event.target.value, i)}
+                // disabled={editedItem === i ? false : true}
+              />
+              <button type="button" onClick={() => setEditedItem(i)}>
+                🖊️
+              </button>
+              <button type="button" onClick={() => removeItem(i)}>
+                ❌
+              </button>
             </li>
           ))}
         </ol>
@@ -37,7 +78,9 @@ function App() {
         <button type="button" onClick={() => handleSubmit()}>
           📌
         </button>
-        <button>💣</button>
+        <button type="button" onClick={() => setListItems([])}>
+          💣
+        </button>
       </form>
     </div>
   );
