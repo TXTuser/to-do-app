@@ -47,18 +47,18 @@ function App() {
         ))}
         <ol>
           {listItems.map((el, i) => (
-            <li
-              onClick={(event) =>
-                (event.target.children[0].style.textDecoration = "line-through")
-              }
-            >
+            <li>
               <input
                 type="text"
                 value={el}
                 className="rename"
                 size={1}
                 onChange={(event) => changeInput(event.target.value, i)}
-                // disabled={editedItem === i ? false : true}
+                onClick={(event) => {
+                  if (editedItem != i) {
+                    event.target.style.textDecoration = "line-through";
+                  }
+                }}
               />
               <button type="button" onClick={() => setEditedItem(i)}>
                 🖊️
