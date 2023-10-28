@@ -24,9 +24,9 @@ function App() {
     setListItems(nextListItems);
   }
 
-  function changeInput(text, id) {
+  function changeInput(newText, id) {
     let nextListItems = [...listItems];
-    nextListItems[id] = text;
+    nextListItems[id].text = newText;
     setListItems(nextListItems);
   }
 
@@ -69,11 +69,20 @@ function App() {
           {listItems.map((el, i) =>
             el.tab === activeTab ? (
               <li
+              style={
+                editedItem === i
+                  ? {border: "1px solid black"}
+                  : {border: "1px solid transparent"}
+              }
                 key={i}
                 onClick={(event) => {
                   if (editedItem != i) {
-                    let nextListItems = listItems;
-                    nextListItems[i].marked=true;
+                    let nextListItems = [...listItems];
+                    if(nextListItems[i].marked) {
+                      nextListItems[i].marked=false
+                    } else {
+                      nextListItems[i].marked=true
+                    }
                     console.log(nextListItems);
                     setListItems(nextListItems);
                   }
@@ -87,16 +96,26 @@ function App() {
                   onChange={(event) => changeInput(event.target.value, i)}
                   // disabled={editedItem === i ? false : true}
                   style={
+
                     editedItem === i
-                      ? { pointerEvents: "auto" }
-                      : { pointerEvents: "none" }
+                      ? { pointerEvents: "auto"}
+                      : { pointerEvents: "none"}
                   }
                 />
                 <button
                   type="button"
                   onClick={(event) => {
-                    setEditedItem(i);
+                    setEditedItem(() => {
+                      if(i === editedItem) {
+                        return null
+                      } else {
+                        return i
+                      }
+                    });
                     event.stopPropagation();
+                    let nextListItems = [...listItems];
+                      nextListItems[i].marked=false
+                    setListItems(nextListItems);
                   }}
                 >
                   🖊️
