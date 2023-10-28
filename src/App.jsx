@@ -69,19 +69,19 @@ function App() {
           {listItems.map((el, i) =>
             el.tab === activeTab ? (
               <li
-              style={
-                editedItem === i
-                  ? {border: "1px solid black"}
-                  : {border: "1px solid transparent"}
-              }
+                style={
+                  editedItem === i
+                    ? { border: "1px solid black" }
+                    : { border: "1px solid transparent" }
+                }
                 key={i}
                 onClick={(event) => {
                   if (editedItem != i) {
                     let nextListItems = [...listItems];
-                    if(nextListItems[i].marked) {
-                      nextListItems[i].marked=false
+                    if (nextListItems[i].marked) {
+                      nextListItems[i].marked = false;
                     } else {
-                      nextListItems[i].marked=true
+                      nextListItems[i].marked = true;
                     }
                     console.log(nextListItems);
                     setListItems(nextListItems);
@@ -96,25 +96,24 @@ function App() {
                   onChange={(event) => changeInput(event.target.value, i)}
                   // disabled={editedItem === i ? false : true}
                   style={
-
                     editedItem === i
-                      ? { pointerEvents: "auto"}
-                      : { pointerEvents: "none"}
+                      ? { pointerEvents: "auto" }
+                      : { pointerEvents: "none" }
                   }
                 />
                 <button
                   type="button"
                   onClick={(event) => {
                     setEditedItem(() => {
-                      if(i === editedItem) {
-                        return null
+                      if (i === editedItem) {
+                        return null;
                       } else {
-                        return i
+                        return i;
                       }
                     });
                     event.stopPropagation();
                     let nextListItems = [...listItems];
-                      nextListItems[i].marked=false
+                    nextListItems[i].marked = false;
                     setListItems(nextListItems);
                   }}
                 >
