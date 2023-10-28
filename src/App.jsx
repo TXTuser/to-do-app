@@ -1,13 +1,26 @@
 import { useEffect, useState, useRef } from "react";
 import "./App.scss";
 function App() {
-  const [tabs, setTabs] = useState([]);
+  const [tabs, setTabs] = useState(["All"]);
   const [listItems, setListItems] = useState([]);
   const [text, setText] = useState("");
   const [editedItem, setEditedItem] = useState(null);
+  const [activeTab, setActiveTab] = useState(0);
+  const [tabCreation, setTabCreation] = useState(false);
+  const [tabText, setTabText] = useState("");
+
+  function createTab() {
+    if (tabCreation) {
+      let newTabs = [...tabs];
+      newTabs.push(tabText);
+      setTabs(newTabs);
+    }
+    setTabCreation((t) => !t);
+  }
+
   function handleSubmit() {
     let nextListItems = [...listItems];
-    nextListItems.push(text);
+    nextListItems.push({ text: text, tab: activeTab, marked: false });
     setListItems(nextListItems);
   }
 
@@ -17,19 +30,11 @@ function App() {
     setListItems(nextListItems);
   }
 
-  // function changeItem(id) {
-  //   setEditedItem(id);
-  // }
-
-  // Удаление по нажатии на бомбочку
-
-  // function deleteListItems() {
-  //   let deleteItems = [...listItems];
-  //   deleteItems = [];
-  //   setListItems(deleteItems);
-  // }
-
-  // onClick={() => deleteListItems()}
+  function newTabs() {
+    let nextTabs = [...tabs];
+    nextTabs.push("NewTab");
+    setTabs(nextTabs);
+  }
 
   function removeItem(id) {
     let nextListItems = [...listItems];
@@ -41,33 +46,73 @@ function App() {
     <div className="App">
       <form action="">
         <h1>ToDo App</h1>
-        <button>+Tab</button>
+        {tabCreation ? (
+          <input
+            type="text"
+            onChange={(event) => setTabText(event.target.value)}
+          />
+        ) : null}
+        <button type="button" onClick={() => createTab()}>
+          +Tab
+        </button>
         {tabs.map((el, i) => (
-          <button className="tab">{el}</button>
+          <button
+            type="button"
+            className={activeTab === i ? "tab activeTab" : "tab"}
+            onClick={() => setActiveTab(i)}
+            key={i}
+          >
+            {el}
+          </button>
         ))}
         <ol>
-          {listItems.map((el, i) => (
-            <li>
-              <input
-                type="text"
-                value={el}
-                className="rename"
-                size={1}
-                onChange={(event) => changeInput(event.target.value, i)}
+          {listItems.map((el, i) =>
+            el.tab === activeTab ? (
+              <li
+                key={i}
                 onClick={(event) => {
                   if (editedItem != i) {
-                    event.target.style.textDecoration = "line-through";
+                    let nextListItems = listItems;
+                    nextListItems[i].marked=true;
+                    console.log(nextListItems);
+                    setListItems(nextListItems);
                   }
                 }}
-              />
-              <button type="button" onClick={() => setEditedItem(i)}>
-                🖊️
-              </button>
-              <button type="button" onClick={() => removeItem(i)}>
-                ❌
-              </button>
-            </li>
-          ))}
+              >
+                <input
+                  type="text"
+                  value={el.text}
+                  className={el.marked === true ? "rename marked" : "rename"}
+                  size={1}
+                  onChange={(event) => changeInput(event.target.value, i)}
+                  // disabled={editedItem === i ? false : true}
+                  style={
+                    editedItem === i
+                      ? { pointerEvents: "auto" }
+                      : { pointerEvents: "none" }
+                  }
+                />
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    setEditedItem(i);
+                    event.stopPropagation();
+                  }}
+                >
+                  🖊️
+                </button>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    removeItem(i);
+                    event.stopPropagation();
+                  }}
+                >
+                  ❌
+                </button>
+              </li>
+            ) : null
+          )}
         </ol>
         <input
           onChange={(event) => setText(event.target.value)}
